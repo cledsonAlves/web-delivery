@@ -1,0 +1,7 @@
+{
+  "name": "Jarinu Delivery - Merchant Portal",
+  "description": "A comprehensive marketplace management platform for local merchants to manage products, orders, and logistics within the Jarinu ecosystem.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
