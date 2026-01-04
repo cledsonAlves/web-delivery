@@ -11,6 +11,7 @@ import {
   X
 } from 'lucide-react';
 import { View } from '../types';
+import { getStoreName, getPrimaryColor, getPrimaryColorDark } from '../config';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -52,7 +53,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, onViewChange, onL
             <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white">
               <Store size={24} />
             </div>
-            <span className="text-xl font-bold text-gray-800">Jarinu Delivery</span>
+            <span className="text-xl font-bold text-gray-800">{getStoreName()}</span>
           </div>
 
           <nav className="flex-1 px-4 space-y-1 mt-4">
