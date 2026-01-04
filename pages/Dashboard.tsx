@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { 
   CartesianGrid, 
@@ -14,7 +13,8 @@ import {
   ShoppingBag, 
   Users, 
   Clock,
-  Sparkles
+  Sparkles,
+  ArrowUpRight
 } from 'lucide-react';
 import { MOCK_SALES_HISTORY } from '../constants';
 import { getSalesInsights } from '../services/geminiService';
@@ -31,79 +31,78 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const stats = [
-    { label: 'Vendas Hoje', value: 'R$ 1.250,00', icon: TrendingUp, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-    { label: 'Pedidos Ativos', value: '12', icon: ShoppingBag, color: 'text-purple-600', bg: 'bg-purple-50' },
-    { label: 'Novos Clientes', value: '8', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Tempo Médio', value: '24 min', icon: Clock, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { label: 'Vendas Hoje', value: 'R$ 1.250,00', icon: TrendingUp, color: 'text-[#ee4d2d]', bg: 'bg-orange-50' },
+    { label: 'Pedidos Ativos', value: '12', icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Novos Clientes', value: '8', icon: Users, color: 'text-green-600', bg: 'bg-green-50' },
+    { label: 'Tempo Médio', value: '24 min', icon: Clock, color: 'text-purple-600', bg: 'bg-purple-50' },
   ];
 
   return (
-    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700">
+    <div className="space-y-8 animate-in fade-in duration-500">
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, i) => (
-          <div key={i} className="bg-white p-7 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
-            <div className="flex flex-col gap-4">
-              <div className={`${stat.bg} ${stat.color} w-12 h-12 rounded-2xl flex items-center justify-center`}>
-                <stat.icon size={24} />
+          <div key={i} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all">
+            <div className="flex items-center gap-4">
+              <div className={`${stat.bg} ${stat.color} p-3 rounded-lg`}>
+                <stat.icon size={22} />
               </div>
               <div>
-                <p className="text-sm font-bold text-gray-500 mb-1">{stat.label}</p>
-                <p className="text-2xl font-black text-gray-900">{stat.value}</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</p>
+                <p className="text-lg font-black text-[#ee4d2d]">{stat.value}</p>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Chart */}
-        <div className="lg:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-10">
+        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between mb-8">
             <div>
-              <h3 className="text-lg font-black text-gray-900">Desempenho de Vendas</h3>
-              <p className="text-sm text-gray-500">Acompanhamento dos últimos 7 dias</p>
+              <h3 className="text-sm font-bold text-[#ee4d2d]">Desempenho Semanal</h3>
+              <p className="text-[10px] text-gray-400 font-medium">Jarinu - Vendas em Tempo Real</p>
             </div>
-            <select className="bg-gray-50 border border-gray-200 text-sm font-bold rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500">
+            <select className="bg-gray-50 border border-gray-100 text-[10px] font-bold rounded-lg px-3 py-1.5 outline-none text-gray-500 uppercase">
               <option>Últimos 7 dias</option>
               <option>Últimos 30 dias</option>
             </select>
           </div>
-          <div className="h-[340px]">
+          <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={MOCK_SALES_HISTORY}>
                 <defs>
                   <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.15}/>
-                    <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#ee4d2d" stopOpacity={0.15}/>
+                    <stop offset="95%" stopColor="#ee4d2d" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f8fafc" />
                 <XAxis 
                   dataKey="date" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{fill: '#94a3b8', fontSize: 12, fontWeight: 600}} 
-                  dy={15} 
+                  tick={{fill: '#94a3b8', fontSize: 11, fontWeight: 600}} 
                 />
                 <YAxis 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{fill: '#94a3b8', fontSize: 12, fontWeight: 600}} 
+                  tick={{fill: '#94a3b8', fontSize: 11, fontWeight: 600}} 
                 />
                 <Tooltip 
                   contentStyle={{
-                    borderRadius: '16px', 
+                    borderRadius: '12px', 
                     border: 'none', 
-                    boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-                    padding: '12px'
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                    fontSize: '12px'
                   }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="sales" 
-                  stroke="#4f46e5" 
-                  strokeWidth={4} 
+                  stroke="#ee4d2d" 
+                  strokeWidth={3} 
                   fillOpacity={1} 
                   fill="url(#colorSales)" 
                 />
@@ -112,43 +111,41 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* AI Insights & Featured */}
-        <div className="space-y-8">
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <Sparkles size={120} className="text-indigo-600" />
-            </div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-                <Sparkles size={20} />
+        {/* AI Insights & Sidebar */}
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="p-1.5 bg-orange-50 text-[#ee4d2d] rounded-lg">
+                <Sparkles size={16} />
               </div>
-              <h3 className="text-lg font-black text-gray-900">Insight IA</h3>
+              <h3 className="text-xs font-bold text-[#ee4d2d] uppercase tracking-wider">Shopee IA Insight</h3>
             </div>
-            <div className="flex-1 bg-indigo-50/50 rounded-2xl p-6 border border-indigo-100/50">
-              <p className="text-indigo-900 text-sm leading-relaxed font-medium italic">
+            <div className="bg-[#fff5f1] rounded-xl p-4 border border-orange-100">
+              <p className="text-[#ee4d2d] text-xs leading-relaxed font-medium italic">
                 "{insight}"
               </p>
             </div>
+            <button className="w-full mt-4 py-2 text-[10px] font-bold text-[#ee4d2d] border border-orange-100 rounded-lg hover:bg-orange-50 transition-colors uppercase tracking-widest">
+              Análise Profunda
+            </button>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-            <h4 className="text-lg font-black text-gray-900 mb-6">Mais Vendidos</h4>
-            <div className="space-y-6">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h4 className="text-xs font-bold text-gray-800 mb-6 uppercase tracking-wider">Top Produtos</h4>
+            <div className="space-y-5">
               {[
-                { name: 'Hambúrguer Artesanal', count: 42, color: 'bg-indigo-600', total: 50 },
-                { name: 'Pizza Calabresa', count: 35, color: 'bg-purple-600', total: 50 },
-                { name: 'Suco Natural', count: 28, color: 'bg-blue-600', total: 50 },
+                { name: 'Hambúrguer Artesanal', count: 42, growth: '+12%' },
+                { name: 'Pizza Calabresa', count: 35, growth: '+8%' },
+                { name: 'Suco Natural', count: 28, growth: '+22%' },
               ].map((item, i) => (
-                <div key={i} className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="font-bold text-gray-700">{item.name}</span>
-                    <span className="font-black text-indigo-600">{item.count} <span className="text-gray-400 font-medium text-xs">vendas</span></span>
+                <div key={i} className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <p className="text-xs font-bold text-gray-700">{item.name}</p>
+                    <p className="text-[10px] text-gray-400">{item.count} pedidos realizados</p>
                   </div>
-                  <div className="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-                    <div 
-                      className={`${item.color} h-full transition-all duration-1000 ease-out`} 
-                      style={{width: `${(item.count/item.total)*100}%`}}
-                    ></div>
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">
+                    <ArrowUpRight size={10} />
+                    {item.growth}
                   </div>
                 </div>
               ))}
