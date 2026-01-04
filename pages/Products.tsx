@@ -42,16 +42,16 @@ const Products: React.FC = () => {
           <input 
             type="text" 
             placeholder="Buscar por nome ou categoria..." 
-            className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm transition-all"
+            className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl focus:ring-2 focus:ring-orange-100 focus:border-[#ee4d2d] outline-none shadow-sm transition-all"
           />
         </div>
         <div className="flex items-center gap-3">
-          <button className="p-3.5 bg-white border border-gray-100 rounded-2xl text-gray-500 hover:bg-gray-50 hover:text-indigo-600 transition-all shadow-sm">
+          <button className="p-3.5 bg-white border border-gray-100 rounded-2xl text-gray-500 hover:bg-orange-50 hover:text-[#ee4d2d] transition-all shadow-sm active:scale-95">
             <Filter size={20} />
           </button>
           <button 
             onClick={() => handleOpenModal()}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3.5 rounded-2xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 font-bold"
+            className="flex items-center gap-2 bg-[#ee4d2d] text-white px-6 py-3.5 rounded-2xl hover:bg-[#d73211] transition-all shadow-lg shadow-orange-100 font-bold active:scale-95"
           >
             <Plus size={20} />
             Novo Produto
@@ -67,34 +67,37 @@ const Products: React.FC = () => {
               <div className="absolute top-5 right-5 flex gap-2 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                 <button 
                   onClick={() => handleOpenModal(product)}
-                  className="p-3 bg-white/90 backdrop-blur-md rounded-2xl text-indigo-600 hover:bg-white shadow-lg transition-colors"
+                  className="p-3 bg-white/90 backdrop-blur-md rounded-2xl text-[#ee4d2d] hover:bg-white shadow-lg transition-colors active:scale-90"
                 >
                   <Edit2 size={18} />
                 </button>
-                <button className="p-3 bg-white/90 backdrop-blur-md rounded-2xl text-red-600 hover:bg-white shadow-lg transition-colors">
+                <button className="p-3 bg-white/90 backdrop-blur-md rounded-2xl text-red-600 hover:bg-white shadow-lg transition-colors active:scale-90">
                   <Trash2 size={18} />
                 </button>
               </div>
               <div className="absolute bottom-5 left-5">
-                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-700 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#ee4d2d] bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg">
                   {product.category}
                 </span>
               </div>
             </div>
             <div className="p-8">
               <div className="flex items-start justify-between gap-4 mb-3">
-                <h4 className="text-xl font-black text-gray-900 leading-tight">{product.name}</h4>
-                <p className="text-xl font-black text-indigo-600 whitespace-nowrap">R$ {product.price.toFixed(2)}</p>
+                <h4 className="text-xl font-black text-gray-900 leading-tight group-hover:text-[#ee4d2d] transition-colors">{product.name}</h4>
+                <p className="text-xl font-black text-[#ee4d2d] whitespace-nowrap">R$ {product.price.toFixed(2)}</p>
               </div>
               <p className="text-sm text-gray-500 font-medium leading-relaxed mb-6 line-clamp-2">{product.description}</p>
               <div className="flex items-center justify-between pt-6 border-t border-gray-50">
                 <div className="flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${product.stock < 10 ? 'bg-red-500 animate-pulse' : 'bg-green-500'}`}></div>
                   <span className={`text-xs font-bold ${product.stock < 10 ? 'text-red-600' : 'text-gray-400'}`}>
-                    {product.stock} unidades
+                    {product.stock} em estoque
                   </span>
                 </div>
-                <button className="text-xs font-black text-indigo-600 hover:text-indigo-800 transition-colors uppercase tracking-widest">
+                <button 
+                  onClick={() => handleOpenModal(product)}
+                  className="text-xs font-black text-[#ee4d2d] hover:text-[#d73211] transition-colors uppercase tracking-widest"
+                >
                   Gerenciar
                 </button>
               </div>
@@ -106,13 +109,13 @@ const Products: React.FC = () => {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-          <div className="absolute inset-0 bg-indigo-900/40 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
+          <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
           <div className="bg-white rounded-[3rem] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative animate-in zoom-in-95 duration-300">
             <div className="p-8 border-b border-gray-50 flex items-center justify-between sticky top-0 bg-white z-10">
               <h3 className="text-2xl font-black text-gray-900">
                 {editingProduct?.id ? 'Editar Produto' : 'Novo Produto'}
               </h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-900 bg-gray-50 p-2 rounded-2xl transition-colors">
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-[#ee4d2d] bg-gray-50 p-2 rounded-2xl transition-colors active:scale-90">
                 <X size={24} />
               </button>
             </div>
@@ -125,7 +128,7 @@ const Products: React.FC = () => {
                     value={editingProduct?.name} 
                     onChange={(e) => setEditingProduct({...editingProduct, name: e.target.value})}
                     placeholder="Ex: Combo Jarinu Master" 
-                    className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50/50 outline-none transition-all font-bold" 
+                    className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-[#ee4d2d] focus:ring-4 focus:ring-orange-50 outline-none transition-all font-bold" 
                   />
                 </div>
                 <div className="space-y-2">
@@ -133,7 +136,7 @@ const Products: React.FC = () => {
                   <select 
                     value={editingProduct?.category}
                     onChange={(e) => setEditingProduct({...editingProduct, category: e.target.value})}
-                    className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-indigo-500 outline-none transition-all font-bold cursor-pointer"
+                    className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-[#ee4d2d] outline-none transition-all font-bold cursor-pointer"
                   >
                     <option>Lanches</option>
                     <option>Pizzas</option>
@@ -147,7 +150,7 @@ const Products: React.FC = () => {
                     type="number" 
                     value={editingProduct?.price}
                     onChange={(e) => setEditingProduct({...editingProduct, price: parseFloat(e.target.value)})}
-                    className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-indigo-500 outline-none transition-all font-bold" 
+                    className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-[#ee4d2d] outline-none transition-all font-bold" 
                   />
                 </div>
                 <div className="space-y-2">
@@ -156,7 +159,7 @@ const Products: React.FC = () => {
                     type="number" 
                     value={editingProduct?.stock}
                     onChange={(e) => setEditingProduct({...editingProduct, stock: parseInt(e.target.value)})}
-                    className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-indigo-500 outline-none transition-all font-bold" 
+                    className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-[#ee4d2d] outline-none transition-all font-bold" 
                   />
                 </div>
               </div>
@@ -167,17 +170,17 @@ const Products: React.FC = () => {
                   <button 
                     onClick={handleGenerateAI}
                     disabled={!editingProduct?.name || isGenerating}
-                    className="text-xs font-black text-indigo-600 flex items-center gap-2 hover:text-indigo-800 disabled:opacity-50 transition-colors bg-indigo-50 px-3 py-1.5 rounded-xl"
+                    className="text-xs font-black text-[#ee4d2d] flex items-center gap-2 hover:text-[#d73211] disabled:opacity-50 transition-colors bg-orange-50 px-3 py-1.5 rounded-xl active:scale-95"
                   >
                     <Sparkles size={14} />
-                    {isGenerating ? 'IA Pensando...' : 'Gerar com IA'}
+                    {isGenerating ? 'IA Criando...' : 'Gerar com IA'}
                   </button>
                 </div>
                 <textarea 
                   rows={4} 
                   value={editingProduct?.description}
                   onChange={(e) => setEditingProduct({...editingProduct, description: e.target.value})}
-                  className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-indigo-500 outline-none transition-all font-bold resize-none"
+                  className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-[#ee4d2d] outline-none transition-all font-bold resize-none"
                   placeholder="Conte um pouco sobre este produto..."
                 ></textarea>
               </div>
@@ -185,13 +188,13 @@ const Products: React.FC = () => {
               <div className="pt-10 border-t border-gray-50 flex flex-col sm:flex-row gap-4">
                 <button 
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-4 text-gray-400 font-bold hover:text-gray-900 transition-colors"
+                  className="flex-1 py-4 text-gray-400 font-bold hover:text-gray-900 transition-colors active:scale-95"
                 >
                   Descartar
                 </button>
                 <button 
                   onClick={handleSave}
-                  className="flex-[2] py-4 bg-indigo-600 text-white font-black rounded-[1.5rem] hover:bg-indigo-700 shadow-xl shadow-indigo-100 transition-all active:scale-95"
+                  className="flex-[2] py-4 bg-[#ee4d2d] text-white font-black rounded-[1.5rem] hover:bg-[#d73211] shadow-xl shadow-orange-100 transition-all active:scale-95"
                 >
                   Confirmar e Salvar
                 </button>
