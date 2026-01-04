@@ -1,54 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Jarinu Delivery - Merchant Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        -webkit-tap-highlight-color: transparent;
-      }
-      
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-
-      /* Custom scrollbar for better visual on desktop without breaking mobile */
-      @media (min-width: 1024px) {
-        ::-webkit-scrollbar {
-          width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-          background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-          background: #e2e8f0;
-          border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-          background: #cbd5e1;
-        }
-      }
-
-      /* Mobile optimization */
-      input, select, textarea {
-        font-size: 16px !important; /* Prevents auto-zoom on iOS */
-      }
-    </style>
-  <!-- Removed importmap: rely on built assets (Vite bundle) for production deploy -->
-</head>
+  </head>
   <body class="bg-gray-50 text-gray-900 overflow-x-hidden selection:bg-orange-100 selection:text-[#ee4d2d]">
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>
-    <!-- <script type="module" src="./src/main.js"></script> -->
-
   </body>
 </html>
