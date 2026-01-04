@@ -5,6 +5,8 @@
 body {
   font-family: 'Inter', sans-serif;
   -webkit-tap-highlight-color: transparent;
+  background-color: #FAFAFB;
+  color: #111827;
 }
 
 .no-scrollbar::-webkit-scrollbar {
