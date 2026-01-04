@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { getPrimaryHex, getAccentHex, getStoreName } from '../config';
 import { 
   ShoppingBag, 
   Mail, 
@@ -24,7 +25,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   return (
     <div className="min-h-screen bg-white flex flex-col lg:flex-row">
       {/* Left Side: Branding & Features (Visible on large screens) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 p-16 flex-col justify-between text-white relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 p-16 flex-col justify-between text-white relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${getPrimaryHex()}22 0%, ${getAccentHex()}22 100%)` }}>
         {/* Decorative Circles */}
         <div className="absolute top-[-10%] left-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
@@ -34,7 +35,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <ShoppingBag size={36} />
           </div>
           <h1 className="text-5xl font-extrabold leading-tight mb-6">
-            Bem-vindo à<br />Plataforma Jarinu Delivery
+            Bem-vindo à<br />Plataforma {getStoreName()}
           </h1>
           <p className="text-indigo-100 text-lg max-w-md mb-12 leading-relaxed">
             Gerencie sua loja, produtos e pedidos em um só lugar. Conecte-se com seus clientes e aumente suas vendas.
@@ -72,7 +73,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         </div>
 
         <div className="relative z-10 text-indigo-200 text-sm">
-          © 2024 Jarinu Delivery. Todos os direitos reservados.
+          © 2026 {getStoreName()}. Todos os direitos reservados.
         </div>
       </div>
 
@@ -145,7 +146,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
             <button 
               onClick={onLogin}
-              className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:translate-y-[-1px] active:translate-y-[0px] transition-all"
+              className="w-full text-white font-bold py-4 rounded-xl shadow-lg hover:translate-y-[-1px] active:translate-y-[0px] transition-all"
+              style={{ backgroundColor: getPrimaryHex(), boxShadow: `0 8px 24px ${getPrimaryHex()}22` }}
             >
               {isRegister ? 'Registrar Agora' : 'Entrar'}
             </button>
