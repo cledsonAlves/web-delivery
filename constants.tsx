@@ -1,42 +1,12 @@
 
 import { OrderStatus, Product, Order, SalesData } from './types';
 
-export const MOCK_PRODUCTS: Product[] = [
-  {
-    id: '1',
-    name: 'Hambúrguer Artesanal',
-    description: 'Pão brioche, carne 180g, queijo cheddar e bacon crocante.',
-    price: 32.50,
-    stock: 50,
-    category: 'Lanches',
-    image: 'https://picsum.photos/seed/burger/400/300'
-  },
-  {
-    id: '2',
-    name: 'Pizza Calabresa Média',
-    description: 'Molho de tomate pelado, mussarela, calabresa e orégano.',
-    price: 45.00,
-    stock: 30,
-    category: 'Pizzas',
-    image: 'https://picsum.photos/seed/pizza/400/300'
-  },
-  {
-    id: '3',
-    name: 'Suco de Laranja 500ml',
-    description: 'Suco natural feito na hora, sem conservantes.',
-    price: 12.00,
-    stock: 100,
-    category: 'Bebidas',
-    image: 'https://picsum.photos/seed/juice/400/300'
-  }
-];
-
 export const MOCK_ORDERS: Order[] = [
   {
     id: 'ORD-001',
     customerName: 'João Silva',
     customerAddress: 'Rua das Flores, 123, Jarinu - SP',
-    items: [{ product: MOCK_PRODUCTS[0], quantity: 2 }],
+    items: [{ product: { id: '1', name: 'Test Product', description: 'Test description', price: 32.50, stock: 50, category: 'Lanches', image: 'https://picsum.photos/seed/burger/400/300' }, quantity: 2 }],
     total: 65.00,
     status: OrderStatus.PENDING,
     createdAt: '2023-11-20T10:30:00Z'
@@ -45,7 +15,7 @@ export const MOCK_ORDERS: Order[] = [
     id: 'ORD-002',
     customerName: 'Maria Oliveira',
     customerAddress: 'Av. Brasil, 456, Jarinu - SP',
-    items: [{ product: MOCK_PRODUCTS[1], quantity: 1 }],
+    items: [{ product: { id: '2', name: 'Test Product 2', description: 'Test description 2', price: 45.00, stock: 30, category: 'Pizzas', image: 'https://picsum.photos/seed/pizza/400/300' }, quantity: 1 }],
     total: 45.00,
     status: OrderStatus.PREPARING,
     createdAt: '2023-11-20T11:15:00Z',
@@ -55,7 +25,7 @@ export const MOCK_ORDERS: Order[] = [
     id: 'ORD-003',
     customerName: 'Carlos Santos',
     customerAddress: 'Rua Central, 789, Jarinu - SP',
-    items: [{ product: MOCK_PRODUCTS[2], quantity: 3 }],
+    items: [{ product: { id: '3', name: 'Test Product 3', description: 'Test description 3', price: 12.00, stock: 100, category: 'Bebidas', image: 'https://picsum.photos/seed/juice/400/300' }, quantity: 3 }],
     total: 36.00,
     status: OrderStatus.DELIVERING,
     createdAt: '2023-11-20T12:00:00Z',
