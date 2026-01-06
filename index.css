@@ -2,10 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force inclusion of required classes */
+@layer utilities {
+  .bg-gray-50 { @apply bg-[#f9fafb]; }
+  .text-gray-900 { @apply text-[#111827]; }
+}
+
 body {
   font-family: 'Inter', sans-serif;
   -webkit-tap-highlight-color: transparent;
-  background-color: #FAFAFB;
+  background-color: #f9fafb;
   color: #111827;
 }
 

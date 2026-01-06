@@ -1,8 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 // Strictly using process.env.API_KEY as per guidelines
-//const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-const ai = new GoogleGenAI({ apiKey: ""});
+const ai = new GoogleGenAI({ apiKey: " "});
 
 export const generateProductDescription = async (productName: string, category: string): Promise<string> => {
   try {

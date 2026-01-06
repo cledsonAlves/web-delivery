@@ -1,18 +1,69 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Edit2, Trash2, Sparkles, X } from 'lucide-react';
-import { MOCK_PRODUCTS } from '../constants';
-import { Product } from '../types';
+import { Product, UIProduct, apiProductToUIProduct, productFormToAPIProduct } from '../types';
 import { generateProductDescription } from '../services/geminiService';
+import { createProduct, getProducts as fetchProducts, deleteProduct as deleteApiProduct, updateProduct, getCategorias } from '../services/apiService';
 
 const Products: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
+  const [products, setProducts] = useState<UIProduct[]>([]);
+  const [categorias, setCategorias] = useState<any[]>([]); // Store categories
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  // Load products and categorias from API on component mount
+  useEffect(() => {
+    loadProducts();
+    loadCategorias();
+  }, []);
 
-  const handleOpenModal = (product?: Product) => {
-    setEditingProduct(product || { name: '', description: '', price: 0, stock: 0, category: 'Lanches' });
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      // Use the hardcoded lojista_id as requested
+      const apiProducts = await fetchProducts({ lojista_id: '3a56d5bd-ce8b-4e43-a212-418abd2f667e' });
+      const uiProducts = apiProducts.map(apiProductToUIProduct);
+      setProducts(uiProducts);
+    } catch (error) {
+      console.error('Error loading products:', error);
+      // Initialize with empty array if there's an error
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadCategorias = async () => {
+    try {
+      // Use the hardcoded lojista_id as requested
+      const categoriasData = await getCategorias('3a56d5bd-ce8b-4e43-a212-418abd2f667e');
+      // Only use fetched categories if they exist, otherwise use defaults
+      if (categoriasData && categoriasData.length > 0) {
+        setCategorias(categoriasData);
+      } else {
+        setCategorias([
+          { id: 'Lanches', nome: 'Lanches' },
+          { id: 'Pizzas', nome: 'Pizzas' },
+          { id: 'Bebidas', nome: 'Bebidas' },
+          { id: 'Sobremesas', nome: 'Sobremesas' }
+        ]);
+      }
+    } catch (error) {
+      console.error('Error loading categories:', error);
+      // Default categories for development
+      setCategorias([
+        { id: 'Lanches', nome: 'Lanches' },
+        { id: 'Pizzas', nome: 'Pizzas' },
+        { id: 'Bebidas', nome: 'Bebidas' },
+        { id: 'Sobremesas', nome: 'Sobremesas' }
+      ]);
+    }
+  };
+
+  const handleOpenModal = (product?: UIProduct) => {
+    setEditingProduct(product || { name: '', description: '', price: 0, stock: 0, categoria_id: 'Lanches', category: 'Lanches' });
     setIsModalOpen(true);
   };
 
@@ -24,14 +75,69 @@ const Products: React.FC = () => {
     setIsGenerating(false);
   };
 
-  const handleSave = () => {
-    if (editingProduct?.id) {
-      setProducts(products.map(p => p.id === editingProduct.id ? editingProduct as Product : p));
-    } else {
-      const newProduct = { ...editingProduct, id: Math.random().toString(36).substr(2, 9), image: `https://picsum.photos/seed/${editingProduct?.name}/400/300` } as Product;
-      setProducts([...products, newProduct]);
+  const handleSave = async () => {
+    try {
+      // Convert UI product to API product
+      const lojistaId = '3a56d5bd-ce8b-4e43-a212-418abd2f667e'; // Use the hardcoded lojista_id as requested
+      
+      const apiProduct = productFormToAPIProduct(
+        {
+          id: editingProduct?.id,
+          name: editingProduct?.name || '',
+          category: editingProduct?.category || '',
+          price: editingProduct?.price || 0,
+          stock: editingProduct?.stock || 0,
+          description: editingProduct?.description || '',
+        },
+        lojistaId, // Use the hardcoded lojista ID
+        editingProduct?.categoria_id // Pass categoria_id if available
+      );
+
+      let updatedProduct;
+      if (editingProduct?.id) {
+        // Update existing product
+        updatedProduct = await updateProduct(editingProduct.id, {
+          ...apiProduct,
+          lojista_id: apiProduct.lojista_id,
+          categoria_id: apiProduct.categoria_id,
+          nome: apiProduct.nome,
+          descricao: apiProduct.descricao,
+          preco: apiProduct.preco,
+          estoque: apiProduct.estoque,
+          estoque_minimo: apiProduct.estoque_minimo,
+          controla_estoque: apiProduct.controla_estoque,
+          ativo: apiProduct.ativo,
+          ordem: apiProduct.ordem,
+        });
+        
+        // Update the product in the UI list
+        setProducts(products.map(p => 
+          p.id === updatedProduct.id ? apiProductToUIProduct(updatedProduct) : p
+        ));
+      } else {
+        // Create new product
+        const newProduct = await createProduct(apiProduct);
+        // Update UI with new product
+        const newUIProduct = apiProductToUIProduct(newProduct);
+        setProducts([...products, newUIProduct]);
+      }
+      
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error saving product:', error);
     }
-    setIsModalOpen(false);
+  };
+
+  // Delete product function
+  const handleDelete = async (productId: string) => {
+    if (window.confirm('Tem certeza que deseja excluir este produto?')) {
+      try {
+        await deleteApiProduct(productId);
+        setProducts(products.filter(product => product.id !== productId));
+      } catch (error) {
+        console.error('Error deleting product:', error);
+      }
+    }
   };
 
   return (
@@ -71,7 +177,10 @@ const Products: React.FC = () => {
                 >
                   <Edit2 size={18} />
                 </button>
-                <button className="p-3 bg-white/90 backdrop-blur-md rounded-2xl text-red-600 hover:bg-white shadow-lg transition-colors active:scale-90">
+                <button 
+                  onClick={() => handleDelete(product.id)}
+                  className="p-3 bg-white/90 backdrop-blur-md rounded-2xl text-red-600 hover:bg-white shadow-lg transition-colors active:scale-90"
+                >
                   <Trash2 size={18} />
                 </button>
               </div>
@@ -134,22 +243,32 @@ const Products: React.FC = () => {
                 <div className="space-y-2">
                   <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Categoria</label>
                   <select 
-                    value={editingProduct?.category}
-                    onChange={(e) => setEditingProduct({...editingProduct, category: e.target.value})}
+                    value={editingProduct?.categoria_id || editingProduct?.category || 'Lanches'}
+                    onChange={(e) => setEditingProduct({...editingProduct, categoria_id: e.target.value, category: e.target.value})}
                     className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-[#ee4d2d] outline-none transition-all font-bold cursor-pointer"
                   >
-                    <option>Lanches</option>
-                    <option>Pizzas</option>
-                    <option>Bebidas</option>
-                    <option>Sobremesas</option>
+                    {categorias.length > 0 ? (
+                      categorias.map((categoria) => (
+                        <option key={categoria.id} value={categoria.id}>
+                          {categoria.nome}
+                        </option>
+                      ))
+                    ) : (
+                      <>
+                        <option value="Lanches">Lanches</option>
+                        <option value="Pizzas">Pizzas</option>
+                        <option value="Bebidas">Bebidas</option>
+                        <option value="Sobremesas">Sobremesas</option>
+                      </>
+                    )}
                   </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Preço (R$)</label>
                   <input 
                     type="number" 
-                    value={editingProduct?.price}
-                    onChange={(e) => setEditingProduct({...editingProduct, price: parseFloat(e.target.value)})}
+                    value={editingProduct?.price || 0}
+                    onChange={(e) => setEditingProduct({...editingProduct, price: parseFloat(e.target.value) || 0})}
                     className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-[#ee4d2d] outline-none transition-all font-bold" 
                   />
                 </div>
@@ -157,8 +276,8 @@ const Products: React.FC = () => {
                   <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Estoque</label>
                   <input 
                     type="number" 
-                    value={editingProduct?.stock}
-                    onChange={(e) => setEditingProduct({...editingProduct, stock: parseInt(e.target.value)})}
+                    value={editingProduct?.stock || 0}
+                    onChange={(e) => setEditingProduct({...editingProduct, stock: parseInt(e.target.value) || 0})}
                     className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-[#ee4d2d] outline-none transition-all font-bold" 
                   />
                 </div>
